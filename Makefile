@@ -18,10 +18,6 @@ check: flake8
 .PHONY: flake8
 flake8: .build/dev-requirements.timestamp .build/flake8.timestamp
 
-.PHONY: test
-test: .build/dev-requirements.timestamp
-	.build/venv/bin/nosetests
-
 .build/venv:
 	mkdir -p $(dir $@)
 	# make a first virtualenv to get a recent version of virtualenv
@@ -34,11 +30,6 @@ test: .build/dev-requirements.timestamp
 .build/dev-requirements.timestamp: .build/venv dev-requirements.txt
 	mkdir -p $(dir $@)
 	.build/venv/bin/pip install -r dev-requirements.txt > /dev/null 2>&1
-	touch $@
-
-.build/requirements.timestamp: .build/venv setup.py requirements.txt
-	mkdir -p $(dir $@)
-	.build/venv/bin/pip install -r requirements.txt
 	touch $@
 
 .build/flake8.timestamp: $(PY_FILES)
