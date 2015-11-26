@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 version = '0.1'
 
@@ -21,7 +21,7 @@ setup(name='thinkhazard_common',
       url='https://github.com/GFDRR/thinkhazard_common',
       author='Camptocamp',
       author_email='info@camptocamp.com',
-      packages=['thinkhazard_common'],
+      packages=find_packages(),
       zip_safe=False,
       install_requires=install_requires,
       setup_requires=setup_requires,
