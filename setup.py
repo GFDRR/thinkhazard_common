@@ -3,6 +3,12 @@ from setuptools import setup
 version = '0.1'
 
 install_requires = [
+    'geoalchemy2',
+    'psycopg2',
+    'SQLAlchemy',
+    'shapely',
+    'transaction',
+    'zope.sqlalchemy'
     ]
 
 setup_requires = [
