@@ -3,8 +3,6 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     Unicode,
-    DateTime,
-    String,
     )
 
 from sqlalchemy.schema import MetaData, Table
@@ -20,8 +18,6 @@ from sqlalchemy.orm import (
 from geoalchemy2 import Geometry
 
 from zope.sqlalchemy import ZopeTransactionExtension
-
-import datetime
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base(metadata=MetaData(schema='datamart'))
@@ -52,14 +48,6 @@ class HazardType(Base):
     mnemonic = Column(Unicode)
     title = Column(Unicode, nullable=False)
     order = Column(Integer)
-
-
-class FeedbackStatus(Base):
-    __tablename__ = 'enum_feedbackstatus'
-
-    id = Column(Integer, primary_key=True)
-    mnemonic = Column(Unicode)
-    title = Column(Unicode, nullable=False)
 
 
 hazardcategory_administrativedivision_table = Table(
@@ -149,21 +137,6 @@ class HazardCategory(Base):
 
     hazardtype = relationship(HazardType)
     hazardlevel = relationship(HazardLevel)
-
-
-class UserFeedback(Base):
-    __tablename__ = 'userfeedback'
-
-    id = Column(Integer, primary_key=True)
-    description = Column(Unicode, nullable=False)
-    submissiondate = Column(DateTime, nullable=False,
-                            default=datetime.datetime.utcnow)
-    useremailaddress = Column(String(254))
-    url = Column(Unicode, nullable=False)
-    feedbackstatus_id = Column(Integer, ForeignKey(FeedbackStatus.id),
-                               nullable=False)
-
-    feedbackstatus = relationship(FeedbackStatus)
 
 
 class ClimateChangeRecommendation(Base):
