@@ -40,6 +40,13 @@ class HazardLevel(Base):
     title = Column(Unicode, nullable=False)
     order = Column(Integer)
 
+    @classmethod
+    def get(cls, mnemonic):
+        with DBSession.no_autoflush:
+            return DBSession.query(cls) \
+                .filter(cls.mnemonic == mnemonic) \
+                .one_or_none()
+
 
 class HazardType(Base):
     __tablename__ = 'enum_hazardtype'
@@ -48,6 +55,13 @@ class HazardType(Base):
     mnemonic = Column(Unicode)
     title = Column(Unicode, nullable=False)
     order = Column(Integer)
+
+    @classmethod
+    def get(cls, mnemonic):
+        with DBSession.no_autoflush:
+            return DBSession.query(cls) \
+                .filter(cls.mnemonic == mnemonic) \
+                .one_or_none()
 
 
 hazardcategory_administrativedivision_table = Table(
