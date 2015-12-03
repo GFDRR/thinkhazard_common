@@ -1,5 +1,5 @@
 from ..models import (DBSession, Base,
-                      AdminLevelType, FeedbackStatus, HazardLevel, HazardType)
+                      AdminLevelType, HazardLevel, HazardType)
 
 
 def initdb(engine, drop_all=False):
@@ -12,7 +12,7 @@ def initdb(engine, drop_all=False):
 
     DBSession.configure(bind=engine)
     populate_datamart(engine)
-    DBSession.remove()
+    DBSession.flush()
 
 
 def schema_exists(engine, schema_name):
@@ -28,16 +28,6 @@ WHERE schema_name = '{}';
 
 
 def populate_datamart(engine):
-    # FeedbackStatus
-    for i in [
-        (u'TBP', u'To be processed'),
-        (u'PIP', u'Process in progress'),  # noqa
-        (u'PRD', u'Process done'),
-    ]:
-        r = FeedbackStatus()
-        r.mnemonic, r.title = i
-        DBSession.add(r)
-
     # AdminLevelType
     for i in [
         (u'COU', u'Country', u'Administrative division of level 0'),
