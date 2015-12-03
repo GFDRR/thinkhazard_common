@@ -12,7 +12,7 @@ def initdb(engine, drop_all=False):
 
     DBSession.configure(bind=engine)
     populate_datamart(engine)
-    DBSession.remove()
+    DBSession.flush()
 
 
 def schema_exists(engine, schema_name):
