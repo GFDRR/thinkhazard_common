@@ -1,5 +1,6 @@
 from ..models import (DBSession, Base,
-                      AdminLevelType, HazardLevel, HazardType)
+                      AdminLevelType, HazardLevel,
+                      HazardType, HazardCategory)
 
 
 def initdb(engine, drop_all=False):
@@ -63,3 +64,14 @@ def populate_datamart(engine):
         r = HazardType()
         r.mnemonic, r.title, r.order = i
         DBSession.add(r)
+
+    # HazardCategory
+    hazardlevels = DBSession.query(HazardLevel)
+    for hazardtype in DBSession.query(HazardType):
+        for hazardlevel in hazardlevels:
+            r = HazardCategory()
+            r.hazardtype = hazardtype
+            r.hazardlevel = hazardlevel
+            r.general_recommendation = u'General recommendation for {} {}'\
+                .format(hazardtype.mnemonic, hazardlevel.mnemonic)
+            DBSession.add(r)
