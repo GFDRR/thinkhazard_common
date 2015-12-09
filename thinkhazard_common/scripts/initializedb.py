@@ -44,7 +44,7 @@ def populate_datamart(engine):
         (u'HIG', u'High', 1),
         (u'MED', u'Medium', 2),
         (u'LOW', u'Low', 3),
-        (u'NPR', u'Not previously reported', 4),  # noqa
+        (u'VLO', u'Very low', 4),
     ]:
         r = HazardLevel()
         r.mnemonic, r.title, r.order = i
