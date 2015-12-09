@@ -31,6 +31,13 @@ class AdminLevelType(Base):
     title = Column(Unicode, nullable=False)
     description = Column(Unicode)
 
+    @classmethod
+    def get(cls, mnemonic):
+        with DBSession.no_autoflush:
+            return DBSession.query(cls) \
+                .filter(cls.mnemonic == mnemonic) \
+                .one_or_none()
+
 
 class HazardLevel(Base):
     __tablename__ = 'enum_hazardlevel'
