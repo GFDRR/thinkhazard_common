@@ -5,7 +5,7 @@ from sqlalchemy import (
     Unicode,
     )
 
-from sqlalchemy.schema import MetaData, Table
+from sqlalchemy.schema import MetaData
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -71,14 +71,21 @@ class HazardType(Base):
                 .one_or_none()
 
 
-hazardcategory_administrativedivision_table = Table(
-    'rel_hazardcategory_administrativedivision', Base.metadata,
-    Column('id', Integer, primary_key=True),
-    Column('administrativedivision_id', Integer,
-           ForeignKey('administrativedivision.id'), nullable=False,
-           index=True),
-    Column('hazardcategory_id', Integer,
-           ForeignKey('hazardcategory.id'), nullable=False, index=True))
+class HazardCategoryAdministrativeDivisionAssociation(Base):
+    __tablename__ = 'rel_hazardcategory_administrativedivision'
+
+    id = Column(Integer, primary_key=True)
+    administrativedivision_id = Column(Integer,
+                                       ForeignKey('administrativedivision.id'),
+                                       nullable=False, index=True)
+    hazardcategory_id = Column(Integer,
+                               ForeignKey('hazardcategory.id'),
+                               nullable=False, index=True)
+    source = Column(Unicode, nullable=False)
+    administrativedivision = relationship('AdministrativeDivision',
+                                          back_populates='hazardcategories')
+    hazardcategory = relationship('HazardCategory',
+                                  back_populates='administrativedivisions')
 
 
 class HazardCategoryTechnicalRecommendationAssociation(Base):
@@ -126,11 +133,9 @@ class AdministrativeDivision(Base):
     leveltype = relationship(AdminLevelType)
     parent = relationship('AdministrativeDivision', uselist=False,
                           remote_side=code)
-
     hazardcategories = relationship(
-        'HazardCategory',
-        secondary=hazardcategory_administrativedivision_table,
-        backref='administrativedivisions')
+        'HazardCategoryAdministrativeDivisionAssociation',
+        back_populates='administrativedivision')
 
     def __json__(self, request):
         if self.leveltype_id == 1:
@@ -158,6 +163,9 @@ class HazardCategory(Base):
 
     hazardtype = relationship(HazardType)
     hazardlevel = relationship(HazardLevel)
+    administrativedivisions = relationship(
+        'HazardCategoryAdministrativeDivisionAssociation',
+        back_populates='hazardcategory')
 
 
 class ClimateChangeRecommendation(Base):
