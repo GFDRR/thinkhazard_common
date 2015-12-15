@@ -39,6 +39,15 @@ class AdminLevelType(Base):
                 .one_or_none()
 
 
+level_weights = {
+    None: 0,
+    u'VLO': 1,
+    u'LOW': 2,
+    u'MED': 3,
+    u'HIG': 4
+}
+
+
 class HazardLevel(Base):
     __tablename__ = 'enum_hazardlevel'
 
@@ -46,6 +55,12 @@ class HazardLevel(Base):
     mnemonic = Column(Unicode)
     title = Column(Unicode, nullable=False)
     order = Column(Integer)
+
+    def __cmp__(self, other):
+        if other is None:
+            return 1
+        return cmp(level_weights[self.mnemonic],
+                   level_weights[other.mnemonic])
 
     @classmethod
     def get(cls, mnemonic):
