@@ -143,7 +143,7 @@ class AdministrativeDivision(Base):
     parent_code = Column(Integer, ForeignKey(
         'administrativedivision.code', use_alter=True,
         name='administrativedivision_parent_code_fkey'))
-    geom = Column(Geometry('MULTIPOLYGON', 3857))
+    geom = Column(Geometry('MULTIPOLYGON', 4326))
 
     leveltype = relationship(AdminLevelType)
     parent = relationship('AdministrativeDivision', uselist=False,
