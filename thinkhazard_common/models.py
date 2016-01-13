@@ -1,10 +1,10 @@
 from sqlalchemy import (
     Column,
     ForeignKey,
+    inspect,
     Integer,
     Unicode,
     )
-
 from sqlalchemy.schema import MetaData
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -37,7 +37,10 @@ class AdminLevelType(Base):
     @classmethod
     def get(cls, mnemonic):
         if mnemonic in adminleveltype_cache:
-            return adminleveltype_cache[mnemonic]
+            adminleveltype = adminleveltype_cache[mnemonic]
+            insp = inspect(adminleveltype)
+            if not insp.detached:
+                return adminleveltype
         with DBSession.no_autoflush:
             adminleveltype = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
@@ -75,7 +78,10 @@ class HazardLevel(Base):
     @classmethod
     def get(cls, mnemonic):
         if mnemonic in hazardlevel_cache:
-            return hazardlevel_cache[mnemonic]
+            hazardlevel = hazardlevel_cache[mnemonic]
+            insp = inspect(hazardlevel)
+            if not insp.detached:
+                return hazardlevel
         with DBSession.no_autoflush:
             hazardlevel = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
@@ -98,7 +104,10 @@ class HazardType(Base):
     @classmethod
     def get(cls, mnemonic):
         if mnemonic in hazardtype_cache:
-            return hazardtype_cache[mnemonic]
+            hazardtype = hazardtype_cache[mnemonic]
+            insp = inspect(hazardtype)
+            if not insp.detached:
+                return hazardtype
         with DBSession.no_autoflush:
             hazardtype = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
