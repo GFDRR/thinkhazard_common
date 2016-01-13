@@ -1,10 +1,12 @@
+import threading
+
 from sqlalchemy import (
     Column,
     ForeignKey,
+    inspect,
     Integer,
     Unicode,
     )
-
 from sqlalchemy.schema import MetaData
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -23,6 +25,12 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base(metadata=MetaData(schema='datamart'))
 
 
+_enum_cache = threading.local()
+_enum_cache.adminleveltypes = {}
+_enum_cache.hazardlevels = {}
+_enum_cache.hazardtypes = {}
+
+
 class AdminLevelType(Base):
     __tablename__ = 'enum_adminleveltype'
 
@@ -33,10 +41,17 @@ class AdminLevelType(Base):
 
     @classmethod
     def get(cls, mnemonic):
+        if mnemonic in _enum_cache.adminleveltypes:
+            adminleveltype = _enum_cache.adminleveltypes[mnemonic]
+            insp = inspect(adminleveltype)
+            if not insp.detached:
+                return adminleveltype
         with DBSession.no_autoflush:
-            return DBSession.query(cls) \
+            adminleveltype = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
                 .one_or_none()
+            _enum_cache.adminleveltypes[mnemonic] = adminleveltype
+            return adminleveltype
 
 
 level_weights = {
@@ -64,10 +79,17 @@ class HazardLevel(Base):
 
     @classmethod
     def get(cls, mnemonic):
+        if mnemonic in _enum_cache.hazardlevels:
+            hazardlevel = _enum_cache.hazardlevels[mnemonic]
+            insp = inspect(hazardlevel)
+            if not insp.detached:
+                return hazardlevel
         with DBSession.no_autoflush:
-            return DBSession.query(cls) \
+            hazardlevel = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
                 .one_or_none()
+            _enum_cache.hazardlevels[mnemonic] = hazardlevel
+            return hazardlevel
 
 
 class HazardType(Base):
@@ -80,10 +102,17 @@ class HazardType(Base):
 
     @classmethod
     def get(cls, mnemonic):
+        if mnemonic in _enum_cache.hazardtypes:
+            hazardtype = _enum_cache.hazardtypes[mnemonic]
+            insp = inspect(hazardtype)
+            if not insp.detached:
+                return hazardtype
         with DBSession.no_autoflush:
-            return DBSession.query(cls) \
+            hazardtype = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
                 .one_or_none()
+            _enum_cache.hazardtypes[mnemonic] = hazardtype
+            return hazardtype
 
 
 class HazardCategoryAdministrativeDivisionAssociation(Base):
