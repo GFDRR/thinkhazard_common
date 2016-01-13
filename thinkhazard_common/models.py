@@ -23,6 +23,9 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base(metadata=MetaData(schema='datamart'))
 
 
+adminleveltype_cache = {}
+
+
 class AdminLevelType(Base):
     __tablename__ = 'enum_adminleveltype'
 
@@ -33,10 +36,14 @@ class AdminLevelType(Base):
 
     @classmethod
     def get(cls, mnemonic):
+        if mnemonic in adminleveltype_cache:
+            return adminleveltype_cache[mnemonic]
         with DBSession.no_autoflush:
-            return DBSession.query(cls) \
+            adminleveltype = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
                 .one_or_none()
+            adminleveltype_cache[adminleveltype.mnemonic] = adminleveltype
+            return adminleveltype
 
 
 level_weights = {
@@ -46,6 +53,9 @@ level_weights = {
     u'MED': 3,
     u'HIG': 4
 }
+
+
+hazardlevel_cache = {}
 
 
 class HazardLevel(Base):
@@ -64,10 +74,17 @@ class HazardLevel(Base):
 
     @classmethod
     def get(cls, mnemonic):
+        if mnemonic in hazardlevel_cache:
+            return hazardlevel_cache[mnemonic]
         with DBSession.no_autoflush:
-            return DBSession.query(cls) \
+            hazardlevel = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
                 .one_or_none()
+            hazardlevel_cache[hazardlevel.mnemonic] = hazardlevel
+            return hazardlevel
+
+
+hazardtype_cache = {}
 
 
 class HazardType(Base):
@@ -80,10 +97,14 @@ class HazardType(Base):
 
     @classmethod
     def get(cls, mnemonic):
+        if mnemonic in hazardtype_cache:
+            return hazardtype_cache[mnemonic]
         with DBSession.no_autoflush:
-            return DBSession.query(cls) \
+            hazardtype = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
                 .one_or_none()
+            hazardtype_cache[hazardtype.mnemonic] = hazardtype
+            return hazardtype
 
 
 class HazardCategoryAdministrativeDivisionAssociation(Base):
