@@ -58,7 +58,7 @@ def populate_datamart(engine):
         (u'VA', u'Volcanic ash', 7),
         (u'CY', u'Cyclone', 4),
         (u'TS', u'Tsunami', 6),
-        (u'SS', u'Coastal flood', 5),
+        (u'CF', u'Coastal flood', 5),
         (u'LS', u'Landslide', 8),
     ]:
         r = HazardType()
