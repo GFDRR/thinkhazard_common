@@ -53,7 +53,8 @@ class AdminLevelType(Base):
             adminleveltype = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
                 .one_or_none()
-            _enum_cache.adminleveltypes[mnemonic] = adminleveltype
+            if adminleveltype is not None:
+                _enum_cache.adminleveltypes[mnemonic] = adminleveltype
             return adminleveltype
 
 
@@ -91,7 +92,8 @@ class HazardLevel(Base):
             hazardlevel = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
                 .one_or_none()
-            _enum_cache.hazardlevels[mnemonic] = hazardlevel
+            if hazardlevel is not None:
+                _enum_cache.hazardlevels[mnemonic] = hazardlevel
             return hazardlevel
 
 
@@ -114,7 +116,8 @@ class HazardType(Base):
             hazardtype = DBSession.query(cls) \
                 .filter(cls.mnemonic == mnemonic) \
                 .one_or_none()
-            _enum_cache.hazardtypes[mnemonic] = hazardtype
+            if hazardtype is not None:
+                _enum_cache.hazardtypes[mnemonic] = hazardtype
             return hazardtype
 
 
