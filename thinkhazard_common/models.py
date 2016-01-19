@@ -8,6 +8,7 @@ from sqlalchemy import (
     inspect,
     Integer,
     String,
+    Table,
     Unicode,
     )
 from sqlalchemy.schema import MetaData
@@ -121,6 +122,16 @@ class HazardType(Base):
             return hazardtype
 
 
+hazardcategory_administrativedivision_hazardset_table = Table(
+    'rel_hazardcategory_administrativedivision_hazardset', Base.metadata,
+    Column('rel_hazardcategory_administrativedivision_id', Integer,
+           ForeignKey('rel_hazardcategory_administrativedivision.id'),
+           primary_key=True),
+    Column('hazardset_id', String,
+           ForeignKey('processing.hazardset.id'),
+           primary_key=True))
+
+
 class HazardCategoryAdministrativeDivisionAssociation(Base):
     __tablename__ = 'rel_hazardcategory_administrativedivision'
 
@@ -131,11 +142,13 @@ class HazardCategoryAdministrativeDivisionAssociation(Base):
     hazardcategory_id = Column(Integer,
                                ForeignKey('hazardcategory.id'),
                                nullable=False, index=True)
-    source = Column(Unicode, nullable=False)
     administrativedivision = relationship('AdministrativeDivision',
                                           back_populates='hazardcategories')
     hazardcategory = relationship('HazardCategory',
                                   back_populates='administrativedivisions')
+    hazardsets = relationship(
+        'HazardSet',
+        secondary=hazardcategory_administrativedivision_hazardset_table)
 
 
 class HazardCategoryTechnicalRecommendationAssociation(Base):
