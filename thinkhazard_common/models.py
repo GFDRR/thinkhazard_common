@@ -39,7 +39,7 @@ class AdminLevelType(Base):
     __tablename__ = 'enum_adminleveltype'
 
     id = Column(Integer, primary_key=True)
-    mnemonic = Column(Unicode)
+    mnemonic = Column(Unicode, unique=True)
     title = Column(Unicode, nullable=False)
     description = Column(Unicode)
 
@@ -72,7 +72,7 @@ class HazardLevel(Base):
     __tablename__ = 'enum_hazardlevel'
 
     id = Column(Integer, primary_key=True)
-    mnemonic = Column(Unicode)
+    mnemonic = Column(Unicode, unique=True)
     title = Column(Unicode, nullable=False)
     order = Column(Integer)
 
@@ -102,7 +102,7 @@ class HazardType(Base):
     __tablename__ = 'enum_hazardtype'
 
     id = Column(Integer, primary_key=True)
-    mnemonic = Column(Unicode)
+    mnemonic = Column(Unicode, unique=True)
     title = Column(Unicode, nullable=False)
     order = Column(Integer)
 
