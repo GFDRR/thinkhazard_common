@@ -7,6 +7,9 @@ def initdb(engine, drop_all=False):
     if not schema_exists(engine, 'datamart'):
         engine.execute("CREATE SCHEMA datamart;")
 
+    if not schema_exists(engine, 'processing'):
+        engine.execute("CREATE SCHEMA processing;")
+
     if drop_all:
         Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
